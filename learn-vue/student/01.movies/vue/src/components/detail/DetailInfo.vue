@@ -1,78 +1,114 @@
 <script setup>
+import { computed } from 'vue'
+
 const props = defineProps({
   movie: Object,
   loading: Boolean,
+  credit: Object,
+  creditLoading: Boolean,
+})
+
+const convertMinutesToHours = (minutes) => {
+  const hours = Math.floor(minutes / 60)
+  const remainMinutes = minutes % 60
+
+  let result = ''
+  if (hours > 0) {
+    result += `${hours}h`
+  }
+  if (remainMinutes > 0 || hours === 0) {
+    result += `${remainMinutes}m`
+  }
+  return result
+}
+
+const production = computed(() => {
+  if (props.movie && props.movie?.production_companies?.length > 0)
+    return props.movie?.production_companies?.map((v) => v.name).join(' • ')
+  return null
+})
+
+const director = computed(() => {
+  if (props.credit && props.credit?.crew && props.credit?.crew?.length > 0)
+    return props.credit.crew.filter((v) => v.job === 'Director').map((v) => v.name)[0]
+  return 'No Director'
+})
+const casting = computed(() => {
+  if (props.credit && props.credit?.cast && props.credit?.cast.length > 0)
+    return props.credit.cast
+      .filter((v) => v.known_for_department === 'Acting' && v.order <= 4)
+      .map((v) => v.name)
+      .join(' • ')
+  return 'No Casting'
 })
 </script>
 <template>
   <section class="detail">
-    <!-- <div class="detail-wrap">
+    <div v-if="!props.loading" class="detail-wrap">
       <div class="detail-info">
         <h2 class="detail-title">Best Game</h2>
         <ul class="detail-features">
           <li class="features-item">
-            <div class="progress-circle p50">
-              <span>10%</span>
+            <div
+              class="progress-circle"
+              :class="[
+                `p${Math.floor(props.movieDetail.vote_average * 10)}`,
+                { over50: Math.floor(props.movieDetail.vote_average * 10) > 50 },
+              ]"
+            >
+              <span>{{ Math.floor(props.movieDetail.vote_average * 10) }}%</span>
               <div class="left-half-clipper">
                 <div class="first50-bar"></div>
                 <div class="value-bar"></div>
               </div>
             </div>
           </li>
-          <li class="features-item">코미디</li>
-          <li class="features-item">1h 51m</li>
+          <li v-for="genre in props.movieDetail.genres" :key="genre.id" class="features-item">
+            {{ genre.name }}
+          </li>
+          <li class="features-item">{{ convertMinutesToHours(props.movieDetail.runtime) }}</li>
         </ul>
         <p class="detail-desc">
-          Based on Edgar Allan Poe's classic bone-chilling tale, this bloody
-          story will have you sleeping with the lights on for years to come.
+          {{ props.movieDetail.overview }}
         </p>
         <ul class="detail-maker">
           <li>
             <strong>Director</strong>
             :
-            <span>Chirst Michels</span>
+            <span>{{ director }}</span>
           </li>
           <li>
             <strong>Casting</strong>
             :
-            <span>Tom Blyth•Rachel Zegler•Peter Dinklage•Jason Schwartzman•Hunter Schafer</span>
+            <span>{{ casting }}</span>
           </li>
           <li>
             <strong>Production</strong>
             :
-            <span>Studio Dragon</span>
+            <span>{{ production }}</span>
           </li>
         </ul>
       </div>
       <div class="detail-poster">
         <img
-          src="https://image.tmdb.org/t/p/w500//clJYtRBUhDtvKhPk2HNfXouviKF.jpg"
-          alt=""
+          :src="`https://image.tmdb.org/t/p/w500/${props.movieDetail.poster_path}`"
+          :alt="props.movieDetail.title"
         />
       </div>
-    </div> -->
-    <div class="detail-wrap">
+    </div>
+    <div v-else class="detail-wrap">
       <div class="detail-info">
-        <h2 class="detail-title skeleton-list-item ui3">{{ movie.original_title }}</h2>
-        <ul class="detail-features skeleton-list-item ui4">
-          {{
-            movie.overview
-          }}
-        </ul>
-        <p class="skeleton-list-item ui4">{{ movie.popularity }}</p>
+        <h2 class="detail-title skeleton-list-item ui3"></h2>
+        <ul class="detail-features skeleton-list-item ui4"></ul>
+        <p class="skeleton-list-item ui4"></p>
         <ul class="detail-maker">
-          <li class="skeleton-list-item ui5">{{ movie.release_date }}</li>
-          <li class="skeleton-list-item ui5">
-            <span>{{ Math.floor(movie.vote_average * 10) }}%</span>
-          </li>
-          <li class="skeleton-list-item ui5">{{ movie.vote_count }}</li>
+          <li class="skeleton-list-item ui5"></li>
+          <li class="skeleton-list-item ui5"></li>
+          <li class="skeleton-list-item ui5"></li>
         </ul>
       </div>
       <div class="detail-poster">
-        <a href="#" class="skeleton-list-item ui0"
-          ><figure>
-            <img :src="`https://image.tmdb.org/t/p/w300/${movie.poster_path}`" alt="" /></figure
-        ></a>
+        <a href="#" class="skeleton-list-item ui0"></a>
       </div>
     </div>
   </section>

@@ -9,6 +9,7 @@ const axiosInstance = axios.create({
 })
 
 export async function useFetch(url, method = 'GET', payload, headers = {}) {
+  // headers는 없어도 됨
   try {
     const options = {
       url,

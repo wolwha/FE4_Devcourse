@@ -20,13 +20,16 @@ onMounted(() => {
     <RouterLink to="/"><h1 class="header__logo">Wave</h1></RouterLink>
     <ul class="header__navi">
       <li>
-        <a href="#">상영중</a>
+        <RouterLink :to="`/movie/now_playing`">상영중</RouterLink>
       </li>
       <li>
-        <a href="#">인기작</a>
+        <RouterLink :to="`/movie/popular`">인기작</RouterLink>
       </li>
       <li>
-        <a href="#">개봉예정</a>
+        <RouterLink :to="`/movie/upcoming`">개봉예정</RouterLink>
+      </li>
+      <li>
+        <RouterLink :to="`/movie/top_rated`">높은 평점을 받은 영화화</RouterLink>
       </li>
     </ul>
     <div class="header-search">

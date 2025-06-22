@@ -57,9 +57,6 @@ export default {
     countedWithoutSpace() {
       return this.inputText.replace(/ /g, '').length
     },
-    // getByteLength(decimal){
-    //   return (decimal >> 7 || )
-    // },
     byteWithSpace() {
       return this.inputText
         .split('')

@@ -38,7 +38,7 @@ const props = defineProps({
         >
           <swiper-slide v-for="movie in props.movies" :key="movie.id">
             <div class="movie-list__item">
-              <a href="#">
+              <RouterLink :to="`/detail/${movie.id}`">
                 <figure>
                   <img :src="`https://image.tmdb.org/t/p/w300/${movie.poster_path}`" alt="" />
                 </figure>
@@ -59,7 +59,7 @@ const props = defineProps({
                   <strong class="movie-list__title">{{ movie.title }}</strong>
                   <span class="release_date">{{ movie.date }}</span>
                 </div>
-              </a>
+              </RouterLink>
             </div>
           </swiper-slide>
         </swiper>

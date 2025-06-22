@@ -34,73 +34,30 @@ export default {
         this.inputNumber = this.inputNumber * 10 - amount;
       } else if (this.inputNumber.includes(".")) {
       }
-      console.log(this.usingDot.includes("."));
     },
-    addNumber() {
+    calculateNumber(amount) {
       if (this.calcArr[0] === 0) {
-        this.calcArr.shift();
+        if (this.inputNumber > 0) {
+          this.calcArr.shift();
+        } else if (this.calcArr[this.calcArr.length - 1] === 0) {
+          return;
+        }
       }
       if (this.inputNumber > 0 || this.inputNumber < 0) {
         this.calcArr.push(this.inputNumber);
-        this.calcArr.push("+");
+        this.calcArr.push(amount);
         this.inputNumber = 0;
       } else if (this.calcArr[1] !== 0) {
-        this.calcArr.push("+");
+        this.calcArr.push(amount);
         this.inputNumber = 0;
       } else {
         return;
       }
-      this.usingDot = [];
-      console.log(this.calcArr);
-    },
-    subtractNumber() {
-      if (this.calcArr[0] === 0) {
-        this.calcArr.shift();
-      }
-      if (this.inputNumber > 0 || this.inputNumber < 0) {
-        this.calcArr.push(this.inputNumber);
-        this.calcArr.push("-");
-        this.inputNumber = 0;
-      } else if (this.calcArr[1] !== 0) {
-        this.calcArr.push("-");
-        this.inputNumber = 0;
-      } else {
-        return;
+      if (this.calcArr.length > 2) {
+        this.calcResult();
+        this.calcArr.push(amount);
       }
       this.usingDot = [];
-      console.log("빼기가 눌렸습니다");
-    },
-    divideNumber() {
-      if (this.calcArr[0] === 0) {
-        this.calcArr.shift();
-      }
-      if (this.inputNumber > 0 || this.inputNumber < 0) {
-        this.calcArr.push(this.inputNumber);
-        this.calcArr.push("÷");
-        this.inputNumber = 0;
-      } else if (this.calcArr[1] !== 0) {
-        this.calcArr.push("÷");
-        this.inputNumber = 0;
-      } else {
-        return;
-      }
-      this.usingDot = [];
-      console.log("빼기가 눌렸습니다");
-    },
-    multiplyNumber() {
-      if (this.calcArr[0] === 0) {
-        this.calcArr.shift();
-      }
-      if (this.inputNumber > 0 || this.inputNumber < 0) {
-        this.calcArr.push(this.inputNumber);
-        this.calcArr.push("×");
-        this.inputNumber = 0;
-      } else if (this.calcArr[1] !== 0) {
-        this.calcArr.push("×");
-        this.inputNumber = 0;
-      }
-      this.usingDot = [];
-      console.log("빼기가 눌렸습니다");
     },
     buttonDot() {
       if (this.usingDot.includes(".")) {
@@ -109,7 +66,6 @@ export default {
       this.usingDot.push(this.inputNumber);
       this.usingDot.push(".");
       this.inputNumber = this.usingDot.join("");
-      console.log(this.usingDot);
     },
     calcResult() {
       if (this.calcArr[this.calcArr.length - 1] === "+") {
@@ -126,20 +82,20 @@ export default {
       console.log(this.calcArr.join(""));
       if (this.calcArr.includes("×")) {
         this.calculated = eval(this.calcArr.join("").replace("×", "*"));
-        console.log(this.calculated);
       } else if (this.calcArr.includes("÷")) {
         this.calculated = eval(this.calcArr.join("").replace("÷", "/"));
       } else {
         this.calculated = eval(this.calcArr.join(""));
       }
       this.calculated =
-        Math.round((this.calculated + Number.EPSILON) * 1000000) / 1000000;
+        Math.round((this.calculated + Number.EPSILON) * 1000000000000) /
+        1000000000000;
       this.calcArr = [];
       this.calcArr.push(this.calculated);
       this.inputNumber = 0;
     },
     handleDelete() {
-      this.inputNumber = 0;
+      this.inputNumber = Math.floor(this.inputNumber / 10);
     },
   },
 };
@@ -152,10 +108,7 @@ export default {
       :calcArr
       :handleAC="handleAC"
       :handleNumber="handleNumber"
-      :addNumber="addNumber"
-      :subtractNumber="subtractNumber"
-      :divideNumber="divideNumber"
-      :multiplyNumber="multiplyNumber"
+      :calculateNumber="calculateNumber"
       :calcResult="calcResult"
       :buttonDot="buttonDot"
       :handleDelete="handleDelete"
@@ -225,3 +178,9 @@ footer {
   }
 }
 </style>
+
+<!-- 수정할 부분
+  연산자 누르면 이전 수식 연산값 출력 <- 완료
+  결과 이전에 연산자를 누르지 않았을 때 숫자를 누르고 연산자를 누르면 결과값 뒤에 배열로 추가되는 문제
+  del 누르면 맨 뒤 숫자 제거 <- 완료
+-->

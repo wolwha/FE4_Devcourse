@@ -6,19 +6,19 @@
     </div>
     <button class="span-two" @click="handleAC">AC</button>
     <button @click="handleDelete">DEL</button>
-    <button class="operation" @click="divideNumber">÷</button>
+    <button class="operation" @click="calculateNumber('÷')">÷</button>
     <button @click="handleNumber(7)">7</button>
     <button @click="handleNumber(8)">8</button>
     <button @click="handleNumber(9)">9</button>
-    <button class="operation" @click="multiplyNumber">×</button>
+    <button class="operation" @click="calculateNumber('×')">×</button>
     <button @click="handleNumber(4)">4</button>
     <button @click="handleNumber(5)">5</button>
     <button @click="handleNumber(6)">6</button>
-    <button class="operation" @click="subtractNumber">-</button>
+    <button class="operation" @click="calculateNumber('-')">-</button>
     <button @click="handleNumber(1)">1</button>
     <button @click="handleNumber(2)">2</button>
     <button @click="handleNumber(3)">3</button>
-    <button class="operation" @click="addNumber">+</button>
+    <button class="operation" @click="calculateNumber('+')">+</button>
     <button class="span-two" @click="handleNumber(0)">0</button>
     <button @click="buttonDot">.</button>
     <button class="operation equals" @click="calcResult">=</button>
@@ -44,16 +44,7 @@ export default {
     handleNumber: {
       type: Function,
     },
-    addNumber: {
-      type: Function,
-    },
-    subtractNumber: {
-      type: Function,
-    },
-    divideNumber: {
-      type: Function,
-    },
-    multiplyNumber: {
+    calculateNumber: {
       type: Function,
     },
     calcResult: {

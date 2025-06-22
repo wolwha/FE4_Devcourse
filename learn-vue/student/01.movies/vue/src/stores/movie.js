@@ -103,16 +103,56 @@ export const useMovieStore = defineStore('movie', () => {
   }
 
   const movieDetail = ref([])
-  const movieDetailLoading = ref(false)
+  const movieDetailLoading = ref(true)
   const getMovieDetail = async (movie_id) => {
     try {
       movieDetailLoading.value = true
       const response = await useFetch(`/movie/${movie_id}`, 'get', {
         language: 'ko',
       })
-      movieDetail.value = response.data
-      console.log(response)
+      movieDetail.value = response.data.results
       movieDetailLoading.value = false
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  const movieTrailerList = ref([])
+  const movieTrailerListLoading = ref(true)
+  const getMovieTrailer = async (id) => {
+    try {
+      movieTrailerListLoading.value = true
+      const response = await useFetch(`/movie/${id}/videos`, 'get')
+      movieTrailerList.value = response.data
+      movieTrailerListLoading.value = false
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  const movieCreditList = ref([])
+  const movieCreditListLoading = ref(true)
+  const getMovieCredit = async (id) => {
+    try {
+      movieCreditListLoading.value = true
+      const response = await useFetch(`/movie/${id}/credits`, 'get', { language: 'ko' })
+      movieCreditList.value = response.data
+      movieCreditListLoading.value = false
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  // 관련 장르
+  const movieDiscoverList = ref([])
+  const movieDiscoverListLoading = ref(true)
+  const getMovieDiscover = async (genres) => {
+    try {
+      movieDiscoverListLoading.value = true
+      const response = await useFetch(`/discover/movie`, 'get', {
+        language: 'ko',
+        with_genres: genres,
+      })
+      movieDiscoverList.value = response.data.results
+      movieDiscoverListLoading.value = false
     } catch (e) {
       console.error(e)
     }
@@ -143,5 +183,17 @@ export const useMovieStore = defineStore('movie', () => {
     movieDetail,
     movieDetailLoading,
     getMovieDetail,
+
+    movieTrailerList,
+    movieTrailerListLoading,
+    getMovieTrailer,
+
+    movieCreditList,
+    movieCreditListLoading,
+    getMovieCredit,
+
+    movieDiscoverList,
+    movieDiscoverListLoading,
+    getMovieDiscover,
   }
 })
